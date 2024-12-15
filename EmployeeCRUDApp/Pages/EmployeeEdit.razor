@@ -1,0 +1,94 @@
+@page "/employee/edit/{id:int}"
+@inject EmployeeService EmployeeService
+@inject PositionService PositionService
+@inject ProgramService ProgramService
+@inject NavigationManager NavigationManager
+@using EmployeeCRUDApp.Services
+@using EmployeeCRUDApp.Data
+<h3>Edit Employee</h3>
+
+@if (IsLoading)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <EditForm Model="EmployeeModel" OnValidSubmit="HandleSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-container">
+            <label>First Name:</label>
+            <InputText class="form-input" @bind-Value="EmployeeModel.FirstName" />
+
+            <label>Last Name:</label>
+            <InputText class="form-input" @bind-Value="EmployeeModel.LastName" />
+
+            <label>Position:</label>
+            <InputSelect class="form-input" @bind-Value="EmployeeModel.PositionID">
+                <option value="">-- Select Position --</option>
+                @foreach (var pos in Positions)
+                {
+                    <option value="@pos.PositionID">@pos.Description</option>
+                }
+            </InputSelect>
+
+            <label>Program:</label>
+            <InputSelect class="form-input" @bind-Value="EmployeeModel.ProgramID">
+                <option value="">-- Select Program --</option>
+                @foreach (var prog in Programs)
+                {
+                    <option value="@prog.ProgramID">@prog.ProgramName</option>
+                }
+            </InputSelect>
+
+            <button type="submit" class="btn-save">Save</button>
+            <button type="button" @onclick="HandleCancel" class="btn-cancel">Cancel</button>
+        </div>
+    </EditForm>
+}
+
+@code {
+    [Parameter] public int id { get; set; } // Route parameter
+    private Employee EmployeeModel = new();
+    private List<Position> Positions = new();
+    private List<Program> Programs = new();
+    private bool IsLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadDropdownData();
+        await LoadEmployeeData();
+        IsLoading = false;
+    }
+
+    private async Task LoadDropdownData()
+    {
+        Positions = await PositionService.GetPositionsAsync();
+        Programs = await ProgramService.GetProgramsAsync();
+    }
+
+    private async Task LoadEmployeeData()
+    {
+        var employee = await EmployeeService.GetEmployeeByIdAsync(id);
+        if (employee != null)
+        {
+            EmployeeModel = employee;
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
+
+    private async Task HandleSubmit()
+    {
+        await EmployeeService.UpdateEmployeeAsync(EmployeeModel);
+        NavigationManager.NavigateTo("/");
+    }
+
+    private void HandleCancel()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}

@@ -1,37 +1,42 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">EmployeeCRUDApp</a>
-    <button class="navbar-toggler" @onclick="ToggleNavMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-</div>
+﻿@inherits LayoutComponentBase
 
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-            </NavLink>
-        </li>
-    </ul>
-</div>
+<header class="main-header">
+    <div class="header-container">
+        <a href="/" class="brand-logo">
+            <img src="logo.png" alt="Logo" class="brand-image">
+            <span class="brand-text">Employee CRUD</span>
+        </a>
+        <nav class="nav-menu">
+            <ul class="nav-links">
+                <li>
+                    <NavLink class="nav-link" href="/">
+                        <i class="fas fa-home"></i> Home
+                    </NavLink>
+                </li>
+                <li>
+                    <NavLink class="nav-link" href="/employee-list">
+                        <i class="fas fa-users"></i> Employees
+                    </NavLink>
+                </li>
+                <li>
+                    <NavLink class="nav-link" href="/programs">
+                        <i class="fas fa-cogs"></i> Programs
+                    </NavLink>
+                </li>
+                <li>
+                    <NavLink class="nav-link" href="/positions">
+                        <i class="fas fa-briefcase"></i> Positions
+                    </NavLink>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
 
-@code {
-    private bool collapseNavMenu = true;
+<main class="content">
+    @Body
+</main>
 
-    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-}
+<footer class="footer">
+    <p>&copy; @DateTime.Now.Year Employee CRUD Application</p>
+</footer>

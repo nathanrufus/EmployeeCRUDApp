@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-
+using EmployeeCRUDApp.Data; // Adjust this namespace based on where your 'Employee', 'Position', and 'Program' models are located.
 namespace EmployeeCRUDApp.Data
 {
     public class AppDbContext : DbContext

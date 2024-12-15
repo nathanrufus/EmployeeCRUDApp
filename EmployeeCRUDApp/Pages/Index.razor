@@ -1,7 +1,76 @@
 ﻿@page "/"
+@inject EmployeeService EmployeeService
+@inject NavigationManager NavigationManager
+@using EmployeeCRUDApp.Services
+@using EmployeeCRUDApp.Data
 
-<h1>Hello, world!</h1>
+<h2>Employees by Partial Name</h2>
 
-Welcome to your new app.
+<div class="search-container">
+    <label>Enter partial name</label>
+    <InputText @bind-Value="SearchTerm" placeholder="Enter partial name" />
+    <button @onclick="SearchEmployees" class="btn-search">Search</button>
+    <button @onclick="ClearSearch" class="btn-clear">Clear</button>
+</div>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+<table class="styled-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Position</th>
+            <th>Program</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var emp in FilteredEmployees)
+        {
+            <tr>
+                <td>@($"{emp.FirstName}, {emp.LastName}")</td>
+                <td>@emp.Position?.Description</td>
+                <td>@emp.Program?.ProgramName</td>
+                <td>
+                    <a href="/employee/edit/@emp.EmployeeID" class="btn-edit">Edit</a>
+                    <button @onclick="() => DeleteEmployee(emp.EmployeeID)" class="btn-delete">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private string SearchTerm = string.Empty;
+    private List<Employee> Employees = new();
+    private List<Employee> FilteredEmployees = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadEmployees();
+    }
+
+    private async Task LoadEmployees()
+    {
+        Employees = await EmployeeService.GetEmployeesAsync();
+        FilteredEmployees = Employees;
+    }
+
+    private void SearchEmployees()
+    {
+        FilteredEmployees = Employees
+            .Where(e => e.FirstName.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase)
+                     || e.LastName.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+    }
+
+    private async Task ClearSearch()
+    {
+        SearchTerm = string.Empty;
+        await LoadEmployees();
+    }
+
+    private async Task DeleteEmployee(int employeeId)
+    {
+        await EmployeeService.DeleteEmployeeAsync(employeeId);
+        await LoadEmployees();
+    }
+}

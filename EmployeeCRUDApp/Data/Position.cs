@@ -1,13 +1,19 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EmployeeCRUDApp.Data
 {
     public class Position
     {
         [Key]
-        public int PositionId { get; set; }
+        public int PositionID { get; set; } // Primary Key
 
-        [Required(ErrorMessage = "Position Name is required")]
-        public string PositionName { get; set; }
+        [Required]
+        [StringLength(50)]
+        public string Description { get; set; } // Position Description
+
+        [ForeignKey("ReportsTo")]
+        public int? ReportsTo { get; set; } // Self-referencing Foreign Key
+        public Position ReportsToPosition { get; set; } // Navigation for hierarchy
     }
 }
