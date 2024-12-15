@@ -1,0 +1,5 @@
+is_global = true
+build_property.RootNamespace = EmployeeCRUDApp
+build_property.ProjectDir = /home/nathan/Documents/Freelance/EmployeeCRUDApp/EmployeeCRUDApp/
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
